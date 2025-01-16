@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Jur(AI)ssic Land</title>
+
+    <!-- Google Fonts Integration -->
+    <link href="https://fonts.googleapis.com/css2?family=Frijole&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background-color: #0b1d26;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    
+        .container {
+            position: relative;
+            width: 960px;
+            height: 540px;
+            overflow: hidden;
+            border: 2px solid #fff;
+            background-color: #000;
+            background-image: url('./assets/images/pod-background.png');
+            background-size: cover;
+            background-position: center;
+        }
+    
+        /* Flying Dino and Flames */
+        .fire-left, .fire-right {
+            position: absolute;
+            bottom: -150px;
+            width: 350px;
+            animation: fire-blink 1.5s infinite alternate;
+        }
+    
+        .fire-left {
+            left: 20px;
+            z-index: 2;
+        }
+    
+        .fire-right {
+            right: 20px;
+            z-index: 2;
+        }
+    
+        .dino {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 100px;
+            animation: fly 5s infinite linear;
+        }
+    
+        @keyframes fire-blink {
+            0% { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+    
+        @keyframes fly {
+            0% { left: 0%; top: 20px; }
+            50% { left: 50%; top: 10px; }
+            100% { left: 100%; top: 20px; }
+        }
+    
+        .text-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: auto;
+            padding: 20px;
+            background: rgba(244, 224, 192, 0.95);
+            color: #000;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+            overflow-y: auto;
+            z-index: 3;
+        }
+    
+        .text-box b {
+            color: #a92a01;
+        }
+    
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    
+        .next-btn, .start-over-btn {
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: #000;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-transform: uppercase;
+        }
+    
+        .next-btn:hover, .start-over-btn:hover {
+            background-color: #ffa500;
+        }
+    
+        .next-btn:disabled {
+            background-color: #888;
+            cursor: not-allowed;
+        }
+    
+/* Progress Bar Styling */
+.progress-bar-container {
+    position: absolute;
+    top: 480px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%; /* Decreased to allow space for emojis */
+    height: 25px;
+    background-color: #a90101;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 20px; /* Added padding for more space */
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 5px;
+    background-color: #ffcc00;
+    transition: width 0.5s ease;
+}
+
+
+    
+        .emoji {
+            font-size: 24px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    
+        .fire-left-emoji {
+            left: 10px;
+        }
+    
+        .fire-right-emoji {
+            right: 10px;
+        }
+    </style>
+    
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Graphics -->
+        <img src="./assets/images/fire-1.png" alt="Fire Left" class="fire-left" id="fireLeft">
+        <img src="./assets/images/fire-2.png" alt="Fire Right" class="fire-right" id="fireRight">
+        <img src="./assets/images/flying-dino.png" alt="Flying Dino" class="dino">
+
+        <!-- Quiz Content -->
+        <div class="text-box" id="quizBox">
+            <div id="questionText"></div>
+            <div class="button-container">
+                <button class="next-btn" onclick="nextQuestion()" id="nextBtn">Next</button>
+            </div>
+        </div>
+
+<!-- Progress Bar with Fire and Dino Emojis -->
+<div class="progress-bar-container">
+    <span class="emoji fire-left-emoji">🔥</span>
+    <div class="progress-bar" id="progressBar"></div>
+    <span class="emoji fire-right-emoji">🦖</span>
+</div>
+
+    </div>
+
+    <script>
+        const questions = [
+            {
+                type: "multiple",
+                question: "Generative AI primarily focuses on:",
+                options: ["Analyzing existing data", "Creating new content", "Predicting future events", "Controlling physical objects"],
+                answer: 1
+            },
+            {
+                type: "multiple",
+                question: "Which of the following is NOT an example of Generative AI?",
+                options: ["ChatGPT", "A self-driving car", "TikTok's content recommendations", "AI-generated images"],
+                answer: 1
+            },
+            {
+                type: "true-false",
+                question: "Generative AI models like GANs can only produce text-based content.",
+                options: ["True", "False"],
+                answer: 1
+            },
+            {
+                type: "true-false",
+                question: "Deepfakes are a potential ethical concern related to Generative AI.",
+                options: ["True", "False"],
+                answer: 0
+            },
+            {
+                type: "true-false",
+                question: "The first AI-generated painting was sold for less than $100,000.",
+                options: ["True", "False"],
+                answer: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById("progressBar");
+            progressBar.style.width = ((currentQuestionIndex + 1) / questions.length) * 100 + "%";
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            const quizBox = document.getElementById("quizBox");
+            const questionText = document.getElementById("questionText");
+
+            questionText.innerHTML = `<b>${question.question}</b><br><br>`;
+
+            if (question.type === "multiple") {
+                question.options.forEach((option, index) => {
+                    questionText.innerHTML += `<input type="radio" name="question" value="${index}" id="opt${index}">
+                        <label for="opt${index}">${option}</label><br>`;
+                });
+            } else if (question.type === "true-false") {
+                questionText.innerHTML += `<input type="radio" name="question" value="0" id="opt0">
+                        <label for="opt0">True</label><br>
+                    <input type="radio" name="question" value="1" id="opt1">
+                        <label for="opt1">False</label><br>`;
+            }
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="question"]:checked');
+            if (selectedOption) {
+                const answer = parseInt(selectedOption.value);
+                const correctAnswer = questions[currentQuestionIndex].answer;
+                if (answer === correctAnswer) {
+                    score++;
+                }
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    updateProgressBar();
+                    displayQuestion();
+                } else {
+                    showResult();
+                }
+            }
+        }
+
+        function showResult() {
+            const quizBox = document.getElementById("quizBox");
+            const questionText = document.getElementById("questionText");
+
+            let resultMessage = "";
+            if (score <= 2) {
+                resultMessage = "Nooo, the AI dinosaurs have taken over. It's GAME OVER!";
+                document.getElementById("fireLeft").style.display = 'block';
+                document.getElementById("fireRight").style.display = 'block';
+            } else if (score === 3) {
+                resultMessage = "You were so close! But the T-rex was closer...";
+                document.getElementById("fireLeft").style.display = 'block';
+                document.getElementById("fireRight").style.display = 'block';
+            } else if (score === 4) {
+                resultMessage = "Oh you did it! Not the best but you tried your best and that's all that matters.";
+                document.getElementById("fireLeft").style.display = 'none';
+                document.getElementById("fireRight").style.display = 'none';
+            } else if (score === 5) {
+                resultMessage = "RAWR!!!! You're a Genius!!";
+                document.getElementById("fireLeft").style.display = 'none';
+                document.getElementById("fireRight").style.display = 'none';
+            }
+
+            questionText.innerHTML = resultMessage;
+
+            // Display Start Over button
+            const buttonContainer = document.querySelector('.button-container');
+            buttonContainer.innerHTML = '<button class="start-over-btn" onclick="startOver()">Start Over</button>';
+        }
+
+        function startOver() {
+            window.location.href = 'homepage.html'; // Redirect to homepage
+        }
+
+        updateProgressBar();
+        displayQuestion();
+    </script>
+</body>
+</html>
