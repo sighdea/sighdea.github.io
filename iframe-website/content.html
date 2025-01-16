@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content - Jur(AI)ssic Land</title>
+
+    <!-- Google Fonts Integration -->
+    <link href="https://fonts.googleapis.com/css2?family=Frijole&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background-color: #0b1d26;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            position: relative;
+            width: 960px;
+            height: 540px;
+            overflow: hidden;
+            border: 2px solid #fff;
+            background-color: #000;
+            background-image: url('./assets/images/pod-background.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .fire-left, .fire-right {
+            position: absolute;
+            bottom: -150px;
+            width: 350px;
+            animation: fire-blink 1.5s infinite alternate;
+        }
+
+        .fire-left {
+            left: 20px;
+            z-index: 2;
+        }
+
+        .fire-right {
+            right: 20px;
+            z-index: 2;
+        }
+
+        @keyframes fire-blink {
+            0% { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .iris {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .text-box {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 530px;
+            height: 120px;
+            padding: 10px;
+            background: rgba(244, 224, 192, 0.95);
+            color: #000;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+            overflow-y: auto;
+            z-index: 4;
+        }
+
+        .text-box b {
+            color: #a92a01;
+        }
+
+        .text-box .ai-art {
+            font-size: 18px; /* Slightly smaller font size */
+            color: #a92a01;
+        }
+
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center; /* Centralized the buttons */
+            width: 300px;
+            z-index: 5;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: #000;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: #ffa500;
+        }
+
+        .ai-art-image {
+            position: absolute;
+            top: 80px; /* Adjusted to be slightly above the text box */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 230px;
+            z-index: 2;
+        }
+
+        .start-quiz-btn {
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: #000;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            width: 200px;
+            margin: 0 auto; /* Center the button */
+            display: block;
+        }
+
+        .start-quiz-btn:hover {
+            background-color: #ffa500;
+        }
+
+        .button-container .nav-btn {
+            display: none; /* Hide BACK and NEXT buttons when on the last content page */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Graphics -->
+        <img src="./assets/images/fire-1.png" alt="Fire Left" class="fire-left">
+        <img src="./assets/images/fire-2.png" alt="Fire Right" class="fire-right">
+        <img src="./assets/images/iris.png" alt="Iris Mascot" class="iris"> <!-- Iris Positioned in the Middle -->
+
+        <!-- Placeholder for AI Art image -->
+        <img src="./assets/images/ai-art.png" alt="AI Art" class="ai-art-image" style="display: none;">
+
+        <!-- Text Box -->
+        <div class="text-box" id="textBox">
+            <b>Hello!</b> I am Iris, a Jur(AI)ssic Land ranger and Gen AI Know-It-All.<br><br>
+            Quick! There’s no time to lose! Let’s hop into a Learning Pod now before the T-rex catches us.
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="button-container">
+            <button class="nav-btn" onclick="prevPage()">BACK</button>
+            <button class="nav-btn" onclick="nextPage()" id="nextBtn">NEXT</button>
+            <button class="start-quiz-btn" onclick="startQuiz()" style="display: none;" id="startQuizBtn">START QUIZ!</button>
+        </div>
+    </div>
+
+    <script>
+        let pageCounter = 1;
+        const textBox = document.getElementById("textBox");
+        const nextBtn = document.getElementById("nextBtn");
+        const startQuizBtn = document.getElementById("startQuizBtn");
+    
+        const pages = [
+            "<b>Hello!</b> I am Iris, a Jur(AI)ssic Land ranger and Gen AI Know-It-All.<br><br>Quick! There’s no time to lose! Let’s hop into a Learning Pod now before the T-rex catches us.",
+            "Phew, now that we’re safe in the Learning Pod let’s go through the biggest and most important question:<br><br><b style='color: #a92a01;'>WHAT IS GENERATIVE AI <br>AND HOW DOES IT WORK?</b>",
+            "Generative AI refers to systems that create new content—like text, images, music, or videos—based on patterns learned from data.<br><br>It uses advanced models like transformers and GANs (Generative Adversarial Networks) to analyze data and produce realistic content.",
+            "Generative AI is widely used in everyday life—for example, ChatGPT assists with human-like conversations, and social media apps like TikTok suggest personalized content and create filters.",
+            "<b>Ethical Considerations</b>: <br><br> Generative AI has the potential to spread misinformation, such as deepfakes or fake news. Always verify sources and critically evaluate the content you consume to avoid being misled.",
+            "Did you know? The first AI-generated painting, <i>‘Portrait of Edmond de Belamy,’</i> was sold for $432,500 at an auction.<br><br><b class='ai-art'>WOULD YOU PAY THAT MUCH FOR AI ART?</b>",
+            "<b>Oh no!</b> The T-rex saw us! <br><br> It's coming! Take the quiz now and save Jur(AI)ssic Land!<br><br><b>START THE QUIZ TO ESCAPE!</b>"
+        ];
+    
+        function updatePage() {
+            textBox.innerHTML = pages[pageCounter - 1];
+            nextBtn.disabled = false; // Enable NEXT button after content update
+    
+            // Show AI art image on the relevant page
+            const aiArtImage = document.querySelector('.ai-art-image');
+            if (pageCounter === 6) {
+                aiArtImage.style.display = 'block';
+                nextBtn.style.display = 'block'; // Show NEXT button on AI art page
+                startQuizBtn.style.display = 'none'; // Hide Start Quiz button on AI art page
+            } else if (pageCounter === pages.length) {
+                // T-rex page: Show "Start Quiz" button here
+                aiArtImage.style.display = 'none';
+                nextBtn.style.display = 'none'; // Hide NEXT button
+                startQuizBtn.style.display = 'block'; // Show START QUIZ button on T-rex page
+            } else {
+                aiArtImage.style.display = 'none';
+                nextBtn.style.display = 'block'; // Show NEXT button
+                startQuizBtn.style.display = 'none'; // Hide START QUIZ button on other pages
+            }
+        }
+    
+        function nextPage() {
+            if (pageCounter < pages.length) {
+                pageCounter++;
+                nextBtn.disabled = true; // Prevent double-click
+                updatePage();
+            }
+        }
+    
+        function prevPage() {
+            if (pageCounter > 1) {
+                pageCounter--;
+                updatePage();
+            }
+        }
+    
+        function startQuiz() {
+            window.location.href = 'quiz.html'; // Navigate to quiz page
+        }
+    
+        updatePage();
+    </script>
+</body>
+</html>
